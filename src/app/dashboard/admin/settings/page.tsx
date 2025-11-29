@@ -1,5 +1,5 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { ADMIN_DASHBOARD_LINKS } from "@/lib/constants";
+import { ADMIN_DASHBOARD_LINKS, COMPANY_NAME, REGISTRATION_EMAIL } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,11 +14,11 @@ export default function AdminSettingsPage() {
         <CardContent className="space-y-4">
           <div>
             <label className="text-sm font-medium">Store name</label>
-            <Input defaultValue="e-store" />
+            <Input defaultValue={COMPANY_NAME} />
           </div>
           <div>
             <label className="text-sm font-medium">Support email</label>
-            <Input type="email" defaultValue="support@e-store.africa" />
+            <Input type="email" defaultValue={REGISTRATION_EMAIL} />
           </div>
           <Button>Save</Button>
         </CardContent>

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import { COMMISSION_TIERS, COMMISSION_RATE, DISCOUNT_PERIOD_MONTHS, DISCOUNT_THRESHOLD_AMOUNT, HIGH_PERFORMER_DISCOUNT } from "@/lib/constants";
+import { COMMISSION_TIERS, COMMISSION_RATE, DISCOUNT_PERIOD_MONTHS, DISCOUNT_THRESHOLD_AMOUNT, HIGH_PERFORMER_DISCOUNT, COMPANY_NAME } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const metadata: Metadata = { title: "Pricing | e-store" };
+export const metadata: Metadata = { title: `Pricing | ${COMPANY_NAME}` };
 
 export default function PricingPage() {
   return (

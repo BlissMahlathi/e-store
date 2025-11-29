@@ -5,8 +5,9 @@ import { VendorOverview } from "@/components/dashboard/vendor-overview";
 import { OrdersList } from "@/components/dashboard/orders-list";
 import { SalesBreakdown } from "@/components/dashboard/sales-breakdown";
 import { fetchVendorDashboardData } from "@/lib/data/dashboard";
+import { COMPANY_NAME } from "@/lib/constants";
 
-export const metadata: Metadata = { title: "Vendor dashboard | e-store" };
+export const metadata: Metadata = { title: `Vendor dashboard | ${COMPANY_NAME}` };
 
 export default async function VendorDashboardPage() {
   const { metrics, chart, orders, salesStream } = await fetchVendorDashboardData();

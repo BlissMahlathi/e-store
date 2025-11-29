@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { COMPANY_NAME } from "@/lib/constants";
 
 const SHOPPING_OPTIONS = ["self-delivery", "courier", "pickup"] as const;
 
@@ -380,7 +381,7 @@ export function VendorOnboardingForm() {
         <input type="checkbox" id="agree" {...form.register("agree")}
           className="mt-1 h-4 w-4 rounded border-border" />
         <label htmlFor="agree" className="text-sm">
-          I confirm all details are accurate and grant e-store permission to validate my information with CIPC, SARS, and Paystack.
+          I confirm all details are accurate and grant {COMPANY_NAME} permission to validate my information with CIPC, SARS, and Paystack.
         </label>
       </div>
       <Button type="submit" className="w-full" disabled={isSubmitting}>

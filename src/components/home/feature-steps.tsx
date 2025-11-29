@@ -7,6 +7,10 @@ export function FeatureSteps() {
       <div>
         <p className="text-xs uppercase tracking-widest text-muted-foreground">Flow</p>
         <h2 className="text-3xl font-semibold">How the store works</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          From interest list to launch readiness, these are the exact checkpoints Bliss and Cynthia use before vendors go
+          live on INHIMStore.
+        </p>
       </div>
       <div className="grid gap-6 md:grid-cols-3">
         {FEATURE_STEPS.map((step, idx) => (

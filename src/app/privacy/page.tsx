@@ -1,6 +1,7 @@
 import { Metadata } from "next";
+import { COMPANY_NAME } from "@/lib/constants";
 
-export const metadata: Metadata = { title: "Privacy | e-store" };
+export const metadata: Metadata = { title: `Privacy | ${COMPANY_NAME}` };
 
 export default function PrivacyPage() {
   return (

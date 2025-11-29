@@ -1,8 +1,11 @@
 export type UserRole = "guest" | "customer" | "vendor" | "admin";
 
-export const COMPANY_NAME = "INHIM Trading (Pty) Ltd";
-export const COMPANY_TAGLINE = "CIPC registered since 2018";
+export const COMPANY_NAME = "INHIMStore";
+export const COMPANY_TAGLINE = "Operated by INHIM Trading (Pty) Ltd";
 export const REGISTRATION_EMAIL = "inhimtrading7@gmail.com";
+export const SUPPORT_PHONE_DISPLAY = "071 523 1720";
+export const SUPPORT_PHONE_DIAL = "+27715231720";
+export const SUPPORT_WHATSAPP_URL = "https://wa.me/27715231720";
 
 export const ALLOWED_ROLES: UserRole[] = ["guest", "customer", "vendor", "admin"];
 
@@ -29,23 +32,23 @@ export const NAV_LINKS: NavLink[] = [
 ];
 
 export const HERO_STATS = [
-  { label: "Vendors live", value: "320" },
-  { label: "Avg. commission", value: "12%" },
-  { label: "Customer NPS", value: "+64" },
+  { label: "Launch window", value: "Jan 2026" },
+  { label: "Pilot vendors", value: "24" },
+  { label: "Founding cities", value: "JHB · PTA" },
 ];
 
 export const FEATURE_STEPS = [
   {
-    title: "Lightning onboarding",
-    body: "Every visitor arrives as a customer and can become a vendor with one flow.",
+    title: "Vendor interest list",
+    body: "Directors review each application personally while we finalize fulfilment partners for the 2025 pilot.",
   },
   {
-    title: "Dashboard clarity",
-    body: "Vendors track earnings, orders, and commission progress while admins monitor the store.",
+    title: "Catalog curation",
+    body: "Cynthia Maebeja works with every vendor to align imagery, pricing, and delivery promises before launch.",
   },
   {
-    title: "Commission rewards",
-    body: "Sell beyond R15,000 in six months to earn automatic fee discounts and perks.",
+    title: "Commission onboarding",
+    body: "As operations switch on, we activate flexible fee tiers and payouts managed directly by INHIM Trading.",
   },
 ];
 
@@ -103,13 +106,18 @@ export const COMMISSION_TIERS = [
 
 export const TESTIMONIALS = [
   {
-    quote: "We crossed R150k in four months thanks to featured placements and transparent commissions.",
+    quote: "INHIMStore treats every listing like a flagship boutique, which is why I’m ready to launch here first.",
     author: "Naledi",
-    role: "Wellness vendor",
+    role: "Home fragrance founder",
   },
   {
-    quote: "Dashboard alerts let the main admin spot growth patterns without extra tools.",
-    author: "Thabo",
-    role: "Main admin",
+    quote: "We’re obsessed with operational readiness so that January 2026 feels like day 100, not day one.",
+    author: "Bliss Mahlathi",
+    role: "Director, INHIM Trading",
+  },
+  {
+    quote: "My priority is giving vendors a direct line to our team—no generic call centers, just real partners.",
+    author: "Cynthia Maebeja",
+    role: "Store Manager, INHIMStore",
   },
 ];

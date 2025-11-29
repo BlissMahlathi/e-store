@@ -4,9 +4,10 @@ import { ProtectedContent } from "@/components/protected-content";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CartWishlistSpotlight } from "@/components/cart/cart-wishlist-spotlight";
 import { fetchMarketplaceInventory } from "@/lib/data/marketplace";
+import { COMPANY_NAME } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Marketplace | e-store",
+  title: `Marketplace | ${COMPANY_NAME}`,
 };
 
 export default async function MarketplacePage() {
@@ -18,8 +19,8 @@ export default async function MarketplacePage() {
         <p className="text-xs uppercase tracking-widest text-muted-foreground">Discover</p>
         <h1 className="text-4xl font-semibold">Products & services</h1>
         <p className="text-muted-foreground md:w-2/3">
-          Catalog curated by the e-store team. Checkout activates for registered customers so we can calculate commissions
-          and trigger payouts.
+          Catalog curated by the INHIM Trading leadership team. Checkout activates for registered customers so we can
+          calculate commissions and trigger payouts.
         </p>
       </div>
       <MarketplaceExplorer products={products} categories={categories} />

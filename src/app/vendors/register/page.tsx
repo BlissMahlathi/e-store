@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VendorOnboardingForm } from "@/components/forms/vendor-onboarding-form";
+import { COMPANY_NAME } from "@/lib/constants";
 
-export const metadata: Metadata = { title: "Vendor registration | e-store" };
+export const metadata: Metadata = { title: `Vendor registration | ${COMPANY_NAME}` };
 
 export default function VendorRegisterPage() {
   return (
