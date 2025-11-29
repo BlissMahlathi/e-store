@@ -7,7 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import type { MarketplaceCategory, MarketplaceProduct } from "@/lib/data/marketplace";
+import type {
+  MarketplaceCategory,
+  MarketplaceProduct,
+  MarketplaceStats,
+  MarketplaceVendorSummary,
+} from "@/lib/data/marketplace";
 import { ProductCard } from "@/components/marketplace/product-card";
 
 const PRICE_SEGMENTS = [
@@ -26,9 +31,11 @@ const STATUS_OPTIONS = [
 type MarketplaceExplorerProps = {
   products: MarketplaceProduct[];
   categories: MarketplaceCategory[];
+  stats?: MarketplaceStats;
+  featuredVendors?: MarketplaceVendorSummary[];
 };
 
-export function MarketplaceExplorer({ products, categories }: MarketplaceExplorerProps) {
+export function MarketplaceExplorer({ products, categories, stats, featuredVendors }: MarketplaceExplorerProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
   const [priceSegment, setPriceSegment] = useState<string>(PRICE_SEGMENTS[0].id);
@@ -81,8 +88,45 @@ export function MarketplaceExplorer({ products, categories }: MarketplaceExplore
     setStatusFilter(STATUS_OPTIONS[0].value);
   };
 
+  const formatCurrency = (value: number) => `R${value.toLocaleString("en-ZA", { maximumFractionDigits: 0 })}`;
+
   return (
     <div className="space-y-6">
+      {stats ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium">Listings</CardTitle>
+              <p className="text-2xl font-semibold">{stats.totalProducts}</p>
+              <p className="text-xs text-muted-foreground">Across {stats.totalCategories} categories</p>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium">Vendors</CardTitle>
+              <p className="text-2xl font-semibold">{stats.totalVendors}</p>
+              <p className="text-xs text-muted-foreground">Registered sellers</p>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium">Avg. price</CardTitle>
+              <p className="text-2xl font-semibold">{formatCurrency(stats.averagePrice)}</p>
+              <p className="text-xs text-muted-foreground">Blended across catalog</p>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium">Avg. rating</CardTitle>
+              <p className="text-2xl font-semibold">
+                {stats.averageRating ? stats.averageRating.toFixed(1) : "–"}
+              </p>
+              <p className="text-xs text-muted-foreground">Based on verified reviews</p>
+            </CardHeader>
+          </Card>
+        </div>
+      ) : null}
+
       <Card>
         <CardHeader className="space-y-1">
           <CardTitle className="text-base">Refine catalog</CardTitle>
@@ -187,6 +231,34 @@ export function MarketplaceExplorer({ products, categories }: MarketplaceExplore
           </div>
         )}
       </div>
+
+      {featuredVendors && featuredVendors.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Featured vendors</CardTitle>
+            <p className="text-sm text-muted-foreground">Top contributors ranked by listing volume.</p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {featuredVendors.map((vendor) => (
+              <div key={vendor.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 p-4">
+                <div>
+                  <p className="text-sm font-medium">{vendor.name}</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Badge variant={vendor.status === "active" ? "default" : "secondary"}>{vendor.status}</Badge>
+                    <span>
+                      {vendor.listingCount} listing{vendor.listingCount === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Avg. price</p>
+                  <p className="text-base font-semibold">{formatCurrency(vendor.averagePrice)}</p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      ) : null}
 
       {filteredProducts.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-3">

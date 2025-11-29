@@ -1,9 +1,8 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { VENDOR_DASHBOARD_LINKS } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ProfileForm } from "@/components/forms/profile-form";
 
 export default function VendorSettingsPage() {
   return (
@@ -12,16 +11,8 @@ export default function VendorSettingsPage() {
         <CardHeader>
           <CardTitle className="text-base">Profile</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Brand name</label>
-            <Input defaultValue="Studio Brava" />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Support email</label>
-            <Input type="email" defaultValue="support@studio.brava" />
-          </div>
-          <Button>Save changes</Button>
+        <CardContent>
+          <ProfileForm />
         </CardContent>
       </Card>
       <Card className="border-border/70">

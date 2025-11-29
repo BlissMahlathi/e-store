@@ -15,6 +15,7 @@ export function SignupForm() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const fullName = (formData.get("fullName") as string | null)?.trim() ?? "";
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
@@ -31,7 +32,10 @@ export function SignupForm() {
         password,
         options: {
           emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/login`,
-          data: { role: "customer" },
+          data: {
+            role: "customer",
+            display_name: fullName || undefined,
+          },
         },
       });
       setIsSubmitting(false);
@@ -48,6 +52,10 @@ export function SignupForm() {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      <div>
+        <label className="text-sm font-medium">Full name</label>
+        <Input type="text" name="fullName" placeholder="Your name" autoComplete="name" />
+      </div>
       <div>
         <label className="text-sm font-medium">Email</label>
         <Input type="email" name="email" required placeholder="you@email.com" />

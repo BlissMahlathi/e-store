@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function MarketplacePage() {
-  const { products, categories } = await fetchMarketplaceInventory();
+  const { products, categories, stats, featuredVendors } = await fetchMarketplaceInventory();
 
   return (
     <div className="space-y-10">
@@ -23,7 +23,7 @@ export default async function MarketplacePage() {
           calculate commissions and trigger payouts.
         </p>
       </div>
-      <MarketplaceExplorer products={products} categories={categories} />
+      <MarketplaceExplorer products={products} categories={categories} stats={stats} featuredVendors={featuredVendors} />
       <CartWishlistSpotlight />
       <ProtectedContent allowed={["customer", "vendor", "admin"]}>
         <Card>

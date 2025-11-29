@@ -6,9 +6,20 @@ import type { CatalogProduct } from "@/lib/data/dashboard";
 type CatalogTableProps = {
   products: CatalogProduct[];
   showVendor?: boolean;
+  showActions?: boolean;
+  onAddListing?: () => void;
 };
 
-export function CatalogTable({ products, showVendor = true }: CatalogTableProps) {
+const formatCurrency = (value: number) => `R${value.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+const formatUpdated = (value: string | null) => {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleDateString("en-ZA", { month: "short", day: "numeric" });
+};
+
+export function CatalogTable({ products, showVendor = true, showActions = true, onAddListing }: CatalogTableProps) {
   return (
     <div className="rounded-2xl border border-border/80">
       <Table>
@@ -17,6 +28,7 @@ export function CatalogTable({ products, showVendor = true }: CatalogTableProps)
             <TableHead>Name</TableHead>
             {showVendor && <TableHead>Vendor</TableHead>}
             <TableHead>Status</TableHead>
+            <TableHead>Updated</TableHead>
             <TableHead className="text-right">Price</TableHead>
           </TableRow>
         </TableHeader>
@@ -29,21 +41,26 @@ export function CatalogTable({ products, showVendor = true }: CatalogTableProps)
                 <TableCell>
                   <Badge variant={product.status === "ready" ? "default" : "outline"}>{product.status}</Badge>
                 </TableCell>
-                <TableCell className="text-right">R{product.price.toLocaleString()}</TableCell>
+                <TableCell>{formatUpdated(product.updatedAt)}</TableCell>
+                <TableCell className="text-right">{formatCurrency(product.price)}</TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={showVendor ? 4 : 3} className="py-8 text-center text-sm text-muted-foreground">
+              <TableCell colSpan={showVendor ? 5 : 4} className="py-8 text-center text-sm text-muted-foreground">
                 No catalog entries yet.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      <div className="border-t border-border/70 p-4 text-right">
-        <Button size="sm">Add listing</Button>
-      </div>
+      {showActions ? (
+        <div className="border-t border-border/70 p-4 text-right">
+          <Button size="sm" onClick={onAddListing}>
+            Add listing
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

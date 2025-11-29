@@ -33,6 +33,7 @@ export type CatalogProduct = {
   price: number;
   status: string;
   vendorName: string;
+  updatedAt: string | null;
 };
 
 export type VendorDashboardData = {
@@ -47,6 +48,11 @@ export type VendorDashboardData = {
     avgOrderValue: number;
     pendingPayout: number;
     discountPercent: number;
+    inventory: {
+      total: number;
+      active: number;
+      comingSoon: number;
+    };
   };
   chart: ChartSeries;
   orders: DashboardOrder[];
@@ -237,6 +243,8 @@ export async function fetchVendorDashboardData(): Promise<VendorDashboardData> {
   const orderCount = paidOrders.length;
   const avgOrderValue = orderCount ? earnings / orderCount : 0;
   const discountPercent = Math.min(100, (earnings / DISCOUNT_THRESHOLD_AMOUNT) * 100);
+  const activeListings = catalogRows.filter((product) => product.status?.toLowerCase() === "ready").length;
+  const comingSoonListings = catalogRows.length - activeListings;
 
   const monthBuckets = getMonthBuckets(DISCOUNT_PERIOD_MONTHS);
   paidOrders.forEach((order) => assignAmountToMonthBucket(monthBuckets, order.placed_at, centsToRands(order.total_cents)));
@@ -269,6 +277,7 @@ export async function fetchVendorDashboardData(): Promise<VendorDashboardData> {
     price: Number(product.base_price ?? 0),
     status: product.status,
     vendorName: vendor.business_name,
+    updatedAt: product.updated_at ?? null,
   }));
 
   return {
@@ -283,6 +292,11 @@ export async function fetchVendorDashboardData(): Promise<VendorDashboardData> {
       avgOrderValue,
       pendingPayout,
       discountPercent,
+      inventory: {
+        total: catalogRows.length,
+        active: activeListings,
+        comingSoon: comingSoonListings,
+      },
     },
     chart: {
       labels: monthBuckets.map((bucket) => bucket.label),
@@ -303,6 +317,7 @@ export async function fetchVendorCatalogProducts(limit = 100): Promise<CatalogPr
     price: Number(product.base_price ?? 0),
     status: product.status,
     vendorName: vendor.business_name,
+    updatedAt: product.updated_at ?? null,
   }));
 }
 

@@ -15,6 +15,7 @@ export type MarketplaceProduct = {
   summary: string | null;
   vendorName: string;
   vendorId: string | null;
+  vendorStatus: string;
   price: number;
   currency: string;
   status: string;
@@ -23,13 +24,33 @@ export type MarketplaceProduct = {
     average: number | null;
     count: number;
   };
+  mediaCount: number;
+  reviewCount: number;
   thumbnailUrl: string | null;
   createdAt: string;
+};
+
+export type MarketplaceVendorSummary = {
+  id: string;
+  name: string;
+  status: string;
+  listingCount: number;
+  averagePrice: number;
+};
+
+export type MarketplaceStats = {
+  totalProducts: number;
+  totalCategories: number;
+  totalVendors: number;
+  averagePrice: number;
+  averageRating: number | null;
 };
 
 export type MarketplaceInventory = {
   products: MarketplaceProduct[];
   categories: MarketplaceCategory[];
+  featuredVendors: MarketplaceVendorSummary[];
+  stats: MarketplaceStats;
 };
 
 type ProductRow = Database["public"]["Tables"]["products"]["Row"];
@@ -135,21 +156,28 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
   });
 
   const mediaByProduct = new Map<string, MediaAssetRow>();
+  const mediaCounts = new Map<string, number>();
   mediaData.forEach((media) => {
     if (!media.product_id) return;
+    mediaCounts.set(media.product_id, (mediaCounts.get(media.product_id) ?? 0) + 1);
     if (!mediaByProduct.has(media.product_id)) {
       mediaByProduct.set(media.product_id, media);
     }
   });
 
   const ratingsByProduct = new Map<string, { total: number; count: number }>();
+  let overallRatingTotal = 0;
+  let overallRatingCount = 0;
   reviewData.forEach((review) => {
     if (!review.product_id) return;
     const current = ratingsByProduct.get(review.product_id) ?? { total: 0, count: 0 };
-    ratingsByProduct.set(review.product_id, {
+    const next = {
       total: current.total + review.rating,
       count: current.count + 1,
-    });
+    };
+    ratingsByProduct.set(review.product_id, next);
+    overallRatingTotal += review.rating;
+    overallRatingCount += 1;
   });
 
   const products: MarketplaceProduct[] = productData.map((product: ProductRow) => {
@@ -165,6 +193,7 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
       summary: product.summary,
       vendorName: vendor?.business_name ?? "Unassigned vendor",
       vendorId: product.vendor_id,
+      vendorStatus: vendor?.status ?? "pending",
       price: toNumber(product.base_price),
       currency: product.currency ?? "ZAR",
       status: product.status,
@@ -181,6 +210,8 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
         average: ratingAggregate && ratingAggregate.count > 0 ? ratingAggregate.total / ratingAggregate.count : null,
         count: ratingAggregate?.count ?? 0,
       },
+      mediaCount: mediaCounts.get(product.id) ?? 0,
+      reviewCount: ratingAggregate?.count ?? 0,
       thumbnailUrl,
       createdAt: product.created_at,
     };
@@ -199,7 +230,42 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
     productCount: countsByCategoryId[category.id] ?? 0,
   }));
 
-  return { products, categories };
+  const stats: MarketplaceStats = {
+    totalProducts: productData.length,
+    totalCategories: categoryData.length,
+    totalVendors: vendorData.length,
+    averagePrice: productData.length
+      ? productData.reduce((sum, product) => sum + toNumber(product.base_price), 0) / productData.length
+      : 0,
+    averageRating: overallRatingCount > 0 ? overallRatingTotal / overallRatingCount : null,
+  };
+
+  const productsByVendor = productData.reduce<Record<string, ProductRow[]>>((acc, product) => {
+    if (!product.vendor_id) return acc;
+    acc[product.vendor_id] = acc[product.vendor_id] ?? [];
+    acc[product.vendor_id].push(product);
+    return acc;
+  }, {});
+
+  const featuredVendors: MarketplaceVendorSummary[] = vendorData
+    .map((vendor) => {
+      const vendorProducts = productsByVendor[vendor.id] ?? [];
+      const listingCount = vendorProducts.length;
+      const averagePrice = listingCount
+        ? vendorProducts.reduce((sum, product) => sum + toNumber(product.base_price), 0) / listingCount
+        : 0;
+      return {
+        id: vendor.id,
+        name: vendor.business_name,
+        status: vendor.status,
+        listingCount,
+        averagePrice,
+      } as MarketplaceVendorSummary;
+    })
+    .sort((a, b) => b.listingCount - a.listingCount)
+    .slice(0, 6);
+
+  return { products, categories, featuredVendors, stats };
 }
 
 export async function fetchFeaturedProducts(limit = 6) {

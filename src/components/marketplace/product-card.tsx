@@ -50,13 +50,19 @@ export function ProductCard({ product }: Props) {
           <CardTitle className="text-base leading-tight">{product.name}</CardTitle>
           {product.category && <Badge variant="outline">{product.category.label}</Badge>}
         </div>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{product.vendorName}</p>
+        <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-muted-foreground">
+          <span>{product.vendorName}</span>
+          <Badge variant={product.vendorStatus === "active" ? "secondary" : "outline"}>{product.vendorStatus}</Badge>
+        </div>
         {product.summary && <p className="text-sm text-muted-foreground line-clamp-2">{product.summary}</p>}
       </CardHeader>
       <CardContent className="mt-auto space-y-4">
         <div>
           <p className="text-2xl font-semibold">R{product.price.toLocaleString()}</p>
-          <p className="text-xs text-muted-foreground">{ratingLabel}</p>
+          <p className="text-xs text-muted-foreground">
+            {ratingLabel}
+            {product.mediaCount > 0 ? ` · ${product.mediaCount} asset${product.mediaCount === 1 ? "" : "s"}` : ""}
+          </p>
         </div>
         <div className="flex flex-col gap-2">
           <CheckoutButton amount={product.price} productName={product.name} />
