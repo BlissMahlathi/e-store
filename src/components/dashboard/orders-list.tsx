@@ -1,19 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { VENDOR_ORDERS } from "@/lib/constants";
 
-const ORDERS = [
-  { id: "#1845", item: "Smart Garden Kit", customer: "Zinzi Q.", value: 2599, status: "Paid" },
-  { id: "#1844", item: "Brand Identity Sprint", customer: "Musa L.", value: 4999, status: "In review" },
-  { id: "#1843", item: "Mobile Bar Experience", customer: "Sipho P.", value: 2499, status: "Fulfilled" },
-];
+type Order = (typeof VENDOR_ORDERS)[number];
 
-export function OrdersList() {
+type OrdersListProps = {
+  title?: string;
+  orders?: Order[];
+};
+
+const DEFAULT_TITLE = "Recent orders";
+
+export function OrdersList({ title = DEFAULT_TITLE, orders = VENDOR_ORDERS }: OrdersListProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Recent orders</CardTitle>
+        <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {ORDERS.map((order) => (
+        {orders.map((order) => (
           <div key={order.id} className="flex items-center justify-between rounded-2xl border border-border/70 p-4">
             <div>
               <p className="text-sm font-medium">{order.item}</p>

@@ -6,6 +6,8 @@ import { SupabaseProvider } from "@/components/providers/supabase-provider";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { CookieConsent } from "@/components/cookie-consent";
+import { EmailVerificationBanner } from "@/components/alerts/email-verification-banner";
+import { COMPANY_NAME, COMPANY_TAGLINE } from "@/lib/constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "e-store | Multi-vendor commerce",
-  description: "Minimal online store for products & services with vendor dashboards and commission insights.",
+  title: `${COMPANY_NAME} Store | Secure multi-vendor commerce`,
+  description: `${COMPANY_NAME} (${COMPANY_TAGLINE}) powers a secure multi-vendor marketplace with commissions, vendor onboarding, and CIPC support services.`,
 };
 
 export default function RootLayout({
@@ -34,6 +36,7 @@ export default function RootLayout({
           <AuthProvider>
             <div className="flex min-h-screen flex-col">
               <SiteHeader />
+              <EmailVerificationBanner />
               <main className="flex-1 bg-background">
                 <div className="mx-auto w-full max-w-6xl px-4 py-10">{children}</div>
               </main>

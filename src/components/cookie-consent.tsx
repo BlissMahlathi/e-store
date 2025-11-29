@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 const COOKIE_KEY = "estore-cookie-consent";
 
 export function CookieConsent() {
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !window.localStorage.getItem(COOKIE_KEY);
-  });
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate visibility from localStorage once on mount
+    setVisible(!window.localStorage.getItem(COOKIE_KEY));
+  }, []);
 
   const accept = () => {
     const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);

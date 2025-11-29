@@ -33,6 +33,7 @@ Role-aware utilities will live inside `src/lib/constants.ts` & `src/lib/roles.ts
 	- `documents` (vendor_id FK, id_number, id_document_url, registration_number, tax_number)
 	- `products` / `services` referencing vendors
 - **Storage buckets:** `vendor-media` (logos, banners), `documents` (ID scans). Use signed URLs.
+- **File ingestion:** Onboarding form submits `FormData` → `/api/vendors` uploads files to the appropriate bucket using service-role credentials, stores returned path in `vendor_applications`. Client receives presigned URL later for previews.
 - **Server actions:** use Supabase Service Role on server actions/api routes for onboarding submissions and file metadata writes.
 - **Environment:** `.env.local` needs `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PAYSTACK_SECRET_KEY`, `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY`.
 

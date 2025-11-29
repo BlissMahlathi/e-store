@@ -3,6 +3,7 @@ import { PRODUCTS } from "@/lib/constants";
 import { ProductCard } from "@/components/marketplace/product-card";
 import { ProtectedContent } from "@/components/protected-content";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CartWishlistSpotlight } from "@/components/cart/cart-wishlist-spotlight";
 
 export const metadata: Metadata = {
   title: "Marketplace | e-store",
@@ -24,6 +25,7 @@ export default function MarketplacePage() {
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+      <CartWishlistSpotlight />
       <ProtectedContent allowed={["customer", "vendor", "admin"]}>
         <Card>
           <CardHeader>

@@ -3,17 +3,16 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { UserRole } from "@/lib/constants";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useSupabase } from "@/components/providers/supabase-provider";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export function LoginForm() {
-  const { setRole } = useAuth();
+  const { signOut } = useAuth();
   const supabase = useSupabase(true);
-  const [role, setLocalRole] = useState<UserRole>("customer");
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,22 +24,26 @@ export function LoginForm() {
       setMessage(null);
 
       if (!supabase) {
-        setRole(role);
-        setMessage("Supabase not configured. Role updated locally.");
+        setError("Supabase not configured. Configure environment variables.");
         return;
       }
 
       setIsSubmitting(true);
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error: signInError, data } = await supabase.auth.signInWithPassword({ email, password });
       setIsSubmitting(false);
 
-      if (error) {
-        setMessage(error.message);
+      if (signInError) {
+        setError(signInError.message);
         return;
       }
 
-      setRole(role);
-      setMessage("Signed in via Supabase");
+      if (!data.user?.email_confirmed_at) {
+        await supabase.auth.signOut();
+        setError("Verify your email before accessing dashboards. Check your inbox for the confirmation link.");
+        return;
+      }
+
+      setMessage("Signed in. Redirecting you to your dashboard...");
     };
 
     attempt();
@@ -56,23 +59,19 @@ export function LoginForm() {
         <label className="text-sm font-medium">Password</label>
         <Input type="password" name="password" placeholder="••••••••" required />
       </div>
-      <div>
-        <label className="text-sm font-medium">Login as</label>
-        <Select value={role} onValueChange={(value) => setLocalRole(value as UserRole)}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="customer">Customer</SelectItem>
-            <SelectItem value="vendor">Vendor</SelectItem>
-            <SelectItem value="admin">Admin</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? "Signing in..." : "Continue"}
       </Button>
       {message ? <p className="text-center text-xs text-muted-foreground">{message}</p> : null}
+      {error ? (
+        <Alert variant="destructive">
+          <AlertTitle>Attention</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : null}
+      <Button type="button" variant="ghost" className="w-full text-xs" onClick={() => signOut()}>
+        Sign out of all sessions
+      </Button>
     </form>
   );
 }

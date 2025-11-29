@@ -41,35 +41,40 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
+const createDefaultValues = (): FormValues => ({
+  businessName: "",
+  fullName: "",
+  email: "",
+  phone: "",
+  whatsapp: "",
+  socialHandle: "",
+  location: "",
+  cipcRegistered: "registered",
+  cipcNumber: "",
+  companyRegNumber: "",
+  taxNumber: "",
+  idNumber: "",
+  businessDescription: "",
+  businessAddress: "",
+  operatingHours: "",
+  businessLogo: undefined,
+  storeBanner: undefined,
+  idDocument: undefined,
+  storeDescription: "",
+  shoppingMethods: ["self-delivery"],
+  deliveryRules: "",
+  deliveryFee: "",
+  payoutMethod: "bank",
+  agree: false,
+});
+
 export function VendorOnboardingForm() {
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      businessName: "",
-      fullName: "",
-      email: "",
-      phone: "",
-      whatsapp: "",
-      socialHandle: "",
-      location: "",
-      cipcRegistered: "registered",
-      cipcNumber: "",
-      companyRegNumber: "",
-      taxNumber: "",
-      idNumber: "",
-      businessDescription: "",
-      businessAddress: "",
-      operatingHours: "",
-      storeDescription: "",
-      shoppingMethods: ["self-delivery"],
-      deliveryRules: "",
-      deliveryFee: "",
-      payoutMethod: "bank",
-      agree: false,
-    },
+    defaultValues: createDefaultValues(),
   });
 
   const shoppingSelection = useWatch({ control: form.control, name: "shoppingMethods" });
@@ -93,28 +98,53 @@ export function VendorOnboardingForm() {
     setError(null);
     setIsSubmitting(true);
 
-    const response = await fetch("/api/vendors", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...values,
-        shoppingMethods: values.shoppingMethods,
-        logoFileName: values.businessLogo ? values.businessLogo.name : null,
-        storeBannerFileName: values.storeBanner ? values.storeBanner.name : null,
-        idDocumentFileName: values.idDocument ? values.idDocument.name : null,
-      }),
-    });
+    try {
+      const formData = new FormData();
+      const { businessLogo, storeBanner, idDocument, shoppingMethods, agree, ...rest } = values;
 
-    setIsSubmitting(false);
+      Object.entries(rest).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          formData.append(key, String(value));
+        }
+      });
 
-    if (!response.ok) {
-      const data = await response.json();
-      setError(data.message ?? "Could not submit application. Try again.");
-      return;
+      formData.append("shoppingMethods", JSON.stringify(shoppingMethods));
+      formData.append("agree", String(agree));
+
+      if (businessLogo instanceof File) {
+        formData.append("businessLogo", businessLogo);
+      }
+      if (storeBanner instanceof File) {
+        formData.append("storeBanner", storeBanner);
+      }
+      if (idDocument instanceof File) {
+        formData.append("idDocument", idDocument);
+      }
+
+      const response = await fetch("/api/vendors", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        let message = "Could not submit application. Try again.";
+        try {
+          const data = await response.json();
+          message = data.message ?? message;
+        } catch (error) {
+          console.warn("Failed to parse vendor application error", error);
+        }
+        throw new Error(message);
+      }
+
+      setStatus("Application captured. Please verify your email so we can notify you once approval is complete.");
+      form.reset(createDefaultValues());
+    } catch (submissionError) {
+      const message = submissionError instanceof Error ? submissionError.message : "Could not submit application. Try again.";
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setStatus("Application captured. We will review within 48 hours.");
-    form.reset();
   };
 
   const cipcNotice = useMemo(
@@ -126,7 +156,7 @@ export function VendorOnboardingForm() {
   );
 
   return (
-    <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+    <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)} encType="multipart/form-data">
       <section className="space-y-4">
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Business identity</p>

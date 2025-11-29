@@ -11,7 +11,7 @@ export default function VendorRegisterPage() {
         <p className="text-xs uppercase tracking-widest text-muted-foreground">Vendors</p>
         <h1 className="text-4xl font-semibold">Join the marketplace</h1>
         <p className="mt-4 text-muted-foreground md:w-2/3">
-          Submit your catalog and payout details. We will review within 48 hours.
+          Submit your catalog and payout details. We will review within 48 hours and only onboard verified email accounts.
         </p>
       </div>
       <Card className="border-border/60">

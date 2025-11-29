@@ -12,23 +12,37 @@ type Props = {
 };
 
 export function ProtectedContent({ allowed, children }: Props) {
-  const { role } = useAuth();
-  if (allowed.includes(role)) {
+  const { role, isAuthenticated, emailVerified } = useAuth();
+
+  if (allowed.includes(role) && (!isAuthenticated || emailVerified)) {
     return <>{children}</>;
   }
+
+  const requiresVerification = isAuthenticated && !emailVerified;
+
   return (
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border/80 p-6 text-center">
       <ShieldAlert className="h-6 w-6 text-primary" />
       <p className="text-sm text-muted-foreground">
-        Create an account or login with the appropriate role to unlock this feature.
+        {requiresVerification
+          ? "Verify your email to unlock this feature. Check your inbox for the confirmation link."
+          : "Create an account or sign in with the correct role to continue."}
       </p>
       <div className="flex flex-col gap-2 md:flex-row">
-        <Button asChild variant="secondary">
-          <Link href="/login">Login</Link>
-        </Button>
-        <Button asChild>
-          <Link href="/vendors/register">Register as vendor</Link>
-        </Button>
+        {!isAuthenticated ? (
+          <>
+            <Button asChild variant="secondary">
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/register">Create account</Link>
+            </Button>
+          </>
+        ) : (
+          <Button asChild>
+            <Link href="/support">Need help verifying?</Link>
+          </Button>
+        )}
       </div>
     </div>
   );
