@@ -1,15 +1,17 @@
 import { Metadata } from "next";
-import { PRODUCTS } from "@/lib/constants";
-import { ProductCard } from "@/components/marketplace/product-card";
+import { MarketplaceExplorer } from "@/components/marketplace/marketplace-explorer";
 import { ProtectedContent } from "@/components/protected-content";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CartWishlistSpotlight } from "@/components/cart/cart-wishlist-spotlight";
+import { fetchMarketplaceInventory } from "@/lib/data/marketplace";
 
 export const metadata: Metadata = {
   title: "Marketplace | e-store",
 };
 
-export default function MarketplacePage() {
+export default async function MarketplacePage() {
+  const { products, categories } = await fetchMarketplaceInventory();
+
   return (
     <div className="space-y-10">
       <div className="space-y-2">
@@ -20,11 +22,7 @@ export default function MarketplacePage() {
           and trigger payouts.
         </p>
       </div>
-      <div className="grid gap-6 md:grid-cols-3">
-        {PRODUCTS.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <MarketplaceExplorer products={products} categories={categories} />
       <CartWishlistSpotlight />
       <ProtectedContent allowed={["customer", "vendor", "admin"]}>
         <Card>

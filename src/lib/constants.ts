@@ -49,19 +49,6 @@ export const FEATURE_STEPS = [
   },
 ];
 
-export const PRODUCTS = [
-  { id: "p1", name: "Smart Garden Kit", vendor: "Umuzi Atelier", category: "Products", price: 2599, rating: 4.8, status: "ready" },
-  { id: "p2", name: "Brand Identity Sprint", vendor: "Studio Brava", category: "Services", price: 4999, rating: 4.9, status: "ready" },
-  { id: "p3", name: "Mobile Bar Experience", vendor: "Copper & Lime", category: "Services", price: 2499, rating: 4.7, status: "ready" },
-  { id: "p4", name: "Wellness Retreat", vendor: "Luxe Escapes", category: "Experiences", price: 8999, rating: 4.9, status: "coming soon" },
-  { id: "p5", name: "Pop-up Retail Booth", vendor: "Kasi Collective", category: "Services", price: 3299, rating: 4.6, status: "ready" },
-  { id: "p6", name: "Premium Coffee Subscription", vendor: "Origin Roasters", category: "Products", price: 699, rating: 4.8, status: "ready" },
-  { id: "p7", name: "AI Copywriting Sprint", vendor: "PromptLab", category: "Services", price: 1899, rating: 4.5, status: "ready" },
-  { id: "p8", name: "Custom Furniture", vendor: "Maker Studios", category: "Products", price: 11999, rating: 4.9, status: "ready" },
-];
-
-export type Product = (typeof PRODUCTS)[number];
-
 export const VENDOR_DASHBOARD_LINKS = [
   { label: "Overview", href: "/dashboard/vendor" },
   { label: "Catalog", href: "/dashboard/vendor/catalog" },
@@ -76,38 +63,6 @@ export const ADMIN_DASHBOARD_LINKS = [
   { label: "Customers", href: "/dashboard/admin/customers" },
   { label: "Commissions", href: "/dashboard/admin/commissions" },
   { label: "Settings", href: "/dashboard/admin/settings" },
-];
-
-export const VENDOR_METRICS = {
-  earnings: 12_400,
-  orders: 142,
-  avgOrderValue: 870,
-};
-
-export const ADMIN_KPIS = [
-  { label: "GMV (6m)", value: "R2.4m", delta: "+18%" },
-  { label: "Active vendors", value: "320", delta: "+24" },
-  { label: "Customers", value: "12.8k", delta: "+640" },
-  { label: "Net commissions", value: "R280k", delta: "+12%" },
-];
-
-export const VENDOR_ORDERS = [
-  { id: "#1845", item: "Smart Garden Kit", customer: "Zinzi Q.", value: 2599, status: "Paid" },
-  { id: "#1844", item: "Brand Identity Sprint", customer: "Musa L.", value: 4999, status: "In review" },
-  { id: "#1843", item: "Mobile Bar Experience", customer: "Sipho P.", value: 2499, status: "Fulfilled" },
-];
-
-export const ADMIN_ORDERS = [
-  { id: "#1901", item: "Vendor payout", customer: "Studio Brava", value: 18450, status: "Awaiting" },
-  { id: "#1899", item: "Commission invoice", customer: "Kasi Collective", value: 7200, status: "Paid" },
-  { id: "#1896", item: "Refund review", customer: "Copper & Lime", value: 2499, status: "Pending" },
-];
-
-export const SALES_STREAM = [
-  { ref: "S-204", vendor: "Umuzi Atelier", channel: "Marketplace", orders: 7, total: 18200, status: "Settled" },
-  { ref: "S-203", vendor: "Studio Brava", channel: "Services", orders: 3, total: 14997, status: "Processing" },
-  { ref: "S-201", vendor: "PromptLab", channel: "Digital", orders: 11, total: 20890, status: "Settled" },
-  { ref: "S-198", vendor: "Maker Studios", channel: "Custom", orders: 4, total: 47996, status: "Awaiting" },
 ];
 
 export const BUSINESS_SERVICE_STEPS = [

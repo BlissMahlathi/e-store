@@ -27,5 +27,4 @@ export const useWishlistStore = create<WishlistState>((set) => ({
   clear: () => set({ items: [] }),
 }));
 
-export const useWishlistSummary = () =>
-  useWishlistStore((state) => ({ count: state.items.length }));
+export const getWishlistCount = (items: WishlistItem[]) => items.length;

@@ -1,27 +1,36 @@
-import { ADMIN_KPIS } from "@/lib/constants";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartCard } from "@/components/dashboard/chart-card";
+import type { AdminDashboardData } from "@/lib/data/dashboard";
 
-export function AdminOverview() {
+type AdminOverviewProps = {
+  kpis: AdminDashboardData["kpis"];
+  charts: AdminDashboardData["charts"];
+};
+
+export function AdminOverview({ kpis, charts }: AdminOverviewProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-4">
-        {ADMIN_KPIS.map((kpi) => (
-          <MetricCard key={kpi.label} label={kpi.label} value={kpi.value} helper={kpi.delta} />
-        ))}
+        {kpis.length > 0 ? (
+          kpis.map((kpi) => <MetricCard key={kpi.label} label={kpi.label} value={kpi.value} helper={kpi.helper} />)
+        ) : (
+          <Card className="md:col-span-4 border-dashed border-border/60">
+            <CardContent className="py-8 text-center text-sm text-muted-foreground">No KPI data yet.</CardContent>
+          </Card>
+        )}
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <ChartCard
           title="Vendor onboarding"
-          labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
-          dataset={[120, 160, 190, 210, 240, 260]}
+          labels={charts.onboarding.labels}
+          dataset={charts.onboarding.dataset}
           accentColor="#16a34a"
         />
         <ChartCard
           title="Commission income"
-          labels={["Jan", "Feb", "Mar", "Apr", "May", "Jun"]}
-          dataset={[420, 520, 610, 580, 640, 720]}
+          labels={charts.commissions.labels}
+          dataset={charts.commissions.dataset}
           accentColor="#f97316"
         />
       </div>

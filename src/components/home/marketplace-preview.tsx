@@ -1,9 +1,15 @@
 import { ShoppingBag } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PRODUCTS } from "@/lib/constants";
+import type { MarketplaceProduct } from "@/lib/data/marketplace";
 import { Badge } from "@/components/ui/badge";
 
-export function MarketplacePreview() {
+type MarketplacePreviewProps = {
+  products: MarketplaceProduct[];
+};
+
+export function MarketplacePreview({ products }: MarketplacePreviewProps) {
+  const featured = products.slice(0, 6);
+
   return (
     <section className="space-y-6 py-16">
       <div className="flex flex-col gap-2">
@@ -18,23 +24,34 @@ export function MarketplacePreview() {
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
-        {PRODUCTS.slice(0, 6).map((product) => (
-          <Card key={product.id} className="border-border/70">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{product.name}</CardTitle>
-                <Badge variant={product.status === "ready" ? "default" : "secondary"}>{product.status}</Badge>
-              </div>
-              <p className="text-xs uppercase text-muted-foreground">
-                by {product.vendor} · {product.category}
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-2xl font-semibold">R{product.price.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">Rating {product.rating} / 5</p>
+        {featured.length > 0 ? (
+          featured.map((product) => (
+            <Card key={product.id} className="border-border/70">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base">{product.name}</CardTitle>
+                  <Badge variant={product.status === "ready" ? "default" : "secondary"}>{product.status}</Badge>
+                </div>
+                <p className="text-xs uppercase text-muted-foreground">
+                  by {product.vendorName}
+                  {product.category ? ` · ${product.category.label}` : ""}
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-2xl font-semibold">R{product.price.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">
+                  {product.rating.average ? `Rating ${product.rating.average.toFixed(1)} / 5` : "No reviews yet"}
+                </p>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card className="border-dashed border-border/60">
+            <CardContent className="py-10 text-center text-sm text-muted-foreground">
+              No listings published yet. Add your first product from the vendor dashboard to feature it here.
             </CardContent>
           </Card>
-        ))}
+        )}
       </div>
     </section>
   );

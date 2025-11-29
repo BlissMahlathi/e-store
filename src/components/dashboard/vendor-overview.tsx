@@ -1,18 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { VENDOR_METRICS, DISCOUNT_THRESHOLD_AMOUNT, DISCOUNT_PERIOD_MONTHS } from "@/lib/constants";
+import { DISCOUNT_THRESHOLD_AMOUNT, DISCOUNT_PERIOD_MONTHS } from "@/lib/constants";
 import { ChartCard } from "@/components/dashboard/chart-card";
 import { MetricCard } from "@/components/dashboard/metric-card";
+import type { ChartSeries, VendorDashboardData } from "@/lib/data/dashboard";
 
-export function VendorOverview() {
-  const percentToDiscount = Math.min(100, (VENDOR_METRICS.earnings / DISCOUNT_THRESHOLD_AMOUNT) * 100);
+type VendorOverviewProps = {
+  metrics: VendorDashboardData["metrics"];
+  chart: ChartSeries;
+};
+
+const formatRand = (value: number) => `R${value.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+export function VendorOverview({ metrics, chart }: VendorOverviewProps) {
+  const percentToDiscount = metrics.discountPercent;
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-3">
-        <MetricCard label="Gross earnings" value={`R${VENDOR_METRICS.earnings.toLocaleString()}`} helper={"Last 6 months"} />
-        <MetricCard label="Orders" value={VENDOR_METRICS.orders.toString()} helper="Fulfilled" />
-        <MetricCard label="Avg. Order Value" value={`R${VENDOR_METRICS.avgOrderValue.toLocaleString()}`} helper="Blended" />
+      <div className="grid gap-4 md:grid-cols-4">
+        <MetricCard label="Gross earnings" value={formatRand(metrics.earnings)} helper="Paid orders" />
+        <MetricCard label="Orders" value={metrics.orders.toString()} helper="Last period" />
+        <MetricCard label="Avg. order value" value={formatRand(metrics.avgOrderValue)} helper="Blended" />
+        <MetricCard label="Pending payout" value={formatRand(metrics.pendingPayout)} helper="Awaiting payment" />
       </div>
       <Card>
         <CardHeader>
@@ -30,8 +39,8 @@ export function VendorOverview() {
       </Card>
       <ChartCard
         title="Weekly earnings"
-        labels={["W1", "W2", "W3", "W4", "W5", "W6"]}
-        dataset={[12, 14, 18, 22, 19, 24]}
+        labels={chart.labels}
+        dataset={chart.dataset}
         accentColor="#2563eb"
       />
     </div>
