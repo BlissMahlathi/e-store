@@ -8,6 +8,8 @@ Modern multi-vendor storefront where every visitor starts as a customer yet can 
 - GSAP + custom `useGsap` hook for animations
 - Chart.js via `react-chartjs-2` for analytics cards
 - React Hook Form + Zod for onboarding flows
+- Supabase (Postgres, Auth, Storage) for vendor/customer data
+- Paystack inline checkout for commission-based payments
 
 ### Experience highlights
 - Minimal loading screen, cookie consent banner, and GSAP hero animations
@@ -20,6 +22,16 @@ Modern multi-vendor storefront where every visitor starts as a customer yet can 
 npm install
 npm run dev
 # visit http://localhost:3000
+```
+
+Create your `.env.local` from `.env.example`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=pk_test_...
+PAYSTACK_SECRET_KEY=sk_test_...
 ```
 
 ### Structure

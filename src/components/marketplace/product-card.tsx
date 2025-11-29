@@ -22,7 +22,7 @@ export function ProductCard({ product }: Props) {
       <CardContent className="mt-auto space-y-3">
         <p className="text-2xl font-semibold">R{product.price.toLocaleString()}</p>
         <p className="text-xs text-muted-foreground">Rating {product.rating} / 5</p>
-        <CheckoutButton />
+        <CheckoutButton amount={product.price} productName={product.name} />
       </CardContent>
     </Card>
   );
