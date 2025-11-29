@@ -165,11 +165,7 @@ const resolveVendorContext = async (): Promise<VendorContext> => {
     throw new Error("Not authenticated");
   }
 
-  const { data: vendor, error: vendorError } = await supabase
-    .from("vendors")
-    .select("id,business_name,commission_rate")
-    .eq("profile_id", user.id)
-    .maybeSingle();
+  const { data: vendor, error: vendorError } = await supabase.from("vendors").select("*").eq("profile_id", user.id).maybeSingle();
 
   if (vendorError) {
     throw new Error(`Failed to load vendor profile: ${vendorError.message}`);
@@ -179,13 +175,13 @@ const resolveVendorContext = async (): Promise<VendorContext> => {
     throw new Error("Vendor profile not found");
   }
 
-  return { supabase, vendor };
+  return { supabase, vendor: vendor as VendorRow };
 };
 
-const loadVendorOrders = async (supabase: SupabaseServerClient, vendorId: string, limit = 50) => {
+const loadVendorOrders = async (supabase: SupabaseServerClient, vendorId: string, limit = 50): Promise<OrderRow[]> => {
   const { data, error } = await supabase
     .from("orders")
-    .select("id,order_number,total_cents,payment_status,status,fulfillment_status,placed_at,profile_id,channel")
+    .select("*")
     .eq("vendor_id", vendorId)
     .order("placed_at", { ascending: false })
     .limit(limit);
@@ -194,13 +190,13 @@ const loadVendorOrders = async (supabase: SupabaseServerClient, vendorId: string
     throw new Error(`Failed to load vendor orders: ${error.message}`);
   }
 
-  return data ?? [];
+  return (data ?? []) as OrderRow[];
 };
 
-const loadVendorCatalog = async (supabase: SupabaseServerClient, vendorId: string, limit = 50) => {
+const loadVendorCatalog = async (supabase: SupabaseServerClient, vendorId: string, limit = 50): Promise<ProductRow[]> => {
   const { data, error } = await supabase
     .from("products")
-    .select("id,name,base_price,status")
+    .select("*")
     .eq("vendor_id", vendorId)
     .order("updated_at", { ascending: false })
     .limit(limit);
@@ -209,21 +205,21 @@ const loadVendorCatalog = async (supabase: SupabaseServerClient, vendorId: strin
     throw new Error(`Failed to load vendor catalog: ${error.message}`);
   }
 
-  return data ?? [];
+  return (data ?? []) as ProductRow[];
 };
 
-const fetchProfilesByIds = async (supabase: SupabaseServerClient, ids: string[]) => {
+const fetchProfilesByIds = async (supabase: SupabaseServerClient, ids: string[]): Promise<ProfileRow[]> => {
   if (!ids.length) {
     return [] as ProfileRow[];
   }
 
-  const { data, error } = await supabase.from("profiles").select("id,display_name").in("id", ids);
+  const { data, error } = await supabase.from("profiles").select("*").in("id", ids);
 
   if (error) {
     throw new Error(`Failed to load profiles: ${error.message}`);
   }
 
-  return data ?? [];
+  return (data ?? []) as ProfileRow[];
 };
 
 export async function fetchVendorDashboardData(): Promise<VendorDashboardData> {
@@ -326,15 +322,15 @@ export async function fetchAdminDashboardData(): Promise<AdminDashboardData> {
     await Promise.all([
       supabase
         .from("orders")
-        .select("id,order_number,total_cents,payment_status,status,fulfillment_status,placed_at,profile_id,vendor_id,channel")
+        .select("*")
         .order("placed_at", { ascending: false })
         .limit(100),
       supabase
         .from("vendors")
-        .select("id,business_name,status,commission_rate,created_at")
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(100),
-      supabase.from("profiles").select("id,display_name,role"),
+      supabase.from("profiles").select("*"),
     ]);
 
   if (ordersError) {
@@ -347,21 +343,25 @@ export async function fetchAdminDashboardData(): Promise<AdminDashboardData> {
     throw new Error(`Failed to load profiles: ${profilesError.message}`);
   }
 
-  const profilesMap = mapProfiles(profileRows ?? []);
-  const vendorsMap = new Map((vendorRows ?? []).map((vendor) => [vendor.id, vendor]));
-  const paidOrders = (orderRows ?? []).filter((order) => order.payment_status?.toLowerCase() === "paid");
+  const ordersData = (orderRows ?? []) as OrderRow[];
+  const vendorData = (vendorRows ?? []) as VendorRow[];
+  const profileData = (profileRows ?? []) as ProfileRow[];
+
+  const profilesMap = mapProfiles(profileData);
+  const vendorsMap = new Map(vendorData.map((vendor) => [vendor.id, vendor]));
+  const paidOrders = ordersData.filter((order) => order.payment_status?.toLowerCase() === "paid");
   const gmv = paidOrders.reduce((sum, order) => sum + centsToRands(order.total_cents), 0);
   const commissionIncome = gmv * COMMISSION_RATE;
-  const activeVendors = (vendorRows ?? []).filter((vendor) => vendor.status?.toLowerCase() === "active").length;
-  const customers = (profileRows ?? []).filter((profile) => profile.role === "customer").length;
+  const activeVendors = vendorData.filter((vendor) => vendor.status?.toLowerCase() === "active").length;
+  const customers = profileData.filter((profile) => profile.role === "customer").length;
 
   const lastSixMonthsBuckets = getMonthBuckets(6);
   paidOrders.forEach((order) => assignAmountToMonthBucket(lastSixMonthsBuckets, order.placed_at, centsToRands(order.total_cents)));
 
   const onboardingBuckets = getMonthBuckets(6);
-  (vendorRows ?? []).forEach((vendor) => assignToMonthBucket(onboardingBuckets, vendor.created_at ?? null));
+  vendorData.forEach((vendor) => assignToMonthBucket(onboardingBuckets, vendor.created_at ?? null));
 
-  const ordersList: DashboardOrder[] = (orderRows ?? []).slice(0, 5).map((order) => ({
+  const ordersList: DashboardOrder[] = ordersData.slice(0, 5).map((order) => ({
     id: order.id,
     orderNumber: order.order_number ?? order.id,
     customer: profilesMap.get(order.profile_id ?? "")?.display_name ?? "Customer",
@@ -372,7 +372,7 @@ export async function fetchAdminDashboardData(): Promise<AdminDashboardData> {
 
   const salesGroups = new Map<string, { vendor: VendorRow | undefined; total: number; orders: number; status: string; channel: string }>();
 
-  (orderRows ?? []).forEach((order) => {
+  ordersData.forEach((order) => {
     const vendor = vendorsMap.get(order.vendor_id ?? "");
     const key = order.vendor_id ?? order.id;
     const group = salesGroups.get(key) ?? {
@@ -424,7 +424,7 @@ export async function fetchAdminVendorSummaries(limit = 12): Promise<AdminVendor
   const supabase = await getSupabaseServerClient();
   const { data: vendors, error: vendorsError } = await supabase
     .from("vendors")
-    .select("id,business_name,status")
+    .select("*")
     .order("business_name", { ascending: true })
     .limit(limit);
 
@@ -432,14 +432,15 @@ export async function fetchAdminVendorSummaries(limit = 12): Promise<AdminVendor
     throw new Error(`Failed to load vendors: ${vendorsError.message}`);
   }
 
-  const vendorIds = (vendors ?? []).map((vendor) => vendor.id);
+  const vendorData = (vendors ?? []) as VendorRow[];
+  const vendorIds = vendorData.map((vendor) => vendor.id);
 
   const [{ data: productRows, error: productsError }, { data: orderRows, error: ordersError }] = await Promise.all([
     vendorIds.length
-      ? supabase.from("products").select("id,vendor_id").in("vendor_id", vendorIds)
+      ? supabase.from("products").select("*").in("vendor_id", vendorIds)
       : Promise.resolve({ data: [], error: null } as { data: ProductRow[]; error: null }),
     vendorIds.length
-      ? supabase.from("orders").select("id,vendor_id,total_cents,payment_status").in("vendor_id", vendorIds).limit(500)
+      ? supabase.from("orders").select("*").in("vendor_id", vendorIds).limit(500)
       : Promise.resolve({ data: [], error: null } as { data: OrderRow[]; error: null }),
   ]);
 
@@ -451,20 +452,23 @@ export async function fetchAdminVendorSummaries(limit = 12): Promise<AdminVendor
     throw new Error(`Failed to load vendor GMV: ${ordersError.message}`);
   }
 
-  const productCounts = (productRows ?? []).reduce<Record<string, number>>((acc, product) => {
+  const productData = (productRows ?? []) as ProductRow[];
+  const orderData = (orderRows ?? []) as OrderRow[];
+
+  const productCounts = productData.reduce<Record<string, number>>((acc, product) => {
     if (!product.vendor_id) return acc;
     acc[product.vendor_id] = (acc[product.vendor_id] ?? 0) + 1;
     return acc;
   }, {});
 
-  const gmvByVendor = (orderRows ?? []).reduce<Record<string, number>>((acc, order) => {
+  const gmvByVendor = orderData.reduce<Record<string, number>>((acc, order) => {
     if (!order.vendor_id) return acc;
     if (order.payment_status?.toLowerCase() !== "paid") return acc;
     acc[order.vendor_id] = (acc[order.vendor_id] ?? 0) + centsToRands(order.total_cents);
     return acc;
   }, {});
 
-  return (vendors ?? []).map((vendor) => ({
+  return vendorData.map((vendor) => ({
     id: vendor.id,
     name: vendor.business_name,
     status: vendor.status,

@@ -58,7 +58,7 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
 
   const { data: productRows, error: productError } = await supabase
     .from("products")
-    .select("id,name,summary,base_price,status,currency,vendor_id,created_at")
+    .select("*")
     .order("updated_at", { ascending: false })
     .limit(limit);
 
@@ -66,13 +66,15 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
     throw new Error(`Failed to load products: ${productError.message}`);
   }
 
-  const productIds = productRows?.map((product) => product.id) ?? [];
-  const vendorIds = Array.from(new Set(productRows?.map((product) => product.vendor_id).filter(Boolean) as string[]));
+  const productData = (productRows ?? []) as ProductRow[];
+
+  const productIds = productData.map((product) => product.id);
+  const vendorIds = Array.from(new Set(productData.map((product) => product.vendor_id).filter(Boolean) as string[]));
 
   const [categoryRows, categoryMapRows, vendorRows, mediaRows, reviewRows] = await Promise.all([
     supabase
       .from("categories")
-      .select("id,name,slug,description,is_active,sort_order")
+      .select("*")
       .eq("is_active", true)
       .order("sort_order", { ascending: true }),
     productIds.length
@@ -84,18 +86,18 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
     vendorIds.length
       ? supabase
           .from("vendors")
-          .select("id,business_name,status")
+          .select("*")
           .in("id", vendorIds)
       : Promise.resolve({ data: [], error: null } as { data: VendorRow[]; error: null }),
     productIds.length
       ? supabase
           .from("media_assets")
-          .select("product_id,bucket,path,media_type,position")
+          .select("*")
           .in("product_id", productIds)
           .order("position", { ascending: true })
       : Promise.resolve({ data: [], error: null } as { data: MediaAssetRow[]; error: null }),
     productIds.length
-      ? supabase.from("reviews").select("product_id,rating").in("product_id", productIds)
+      ? supabase.from("reviews").select("*").in("product_id", productIds)
       : Promise.resolve({ data: [], error: null } as { data: ReviewRow[]; error: null }),
   ]);
 
@@ -116,18 +118,24 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
     throw new Error(`Failed to load product reviews: ${reviewRows.error.message}`);
   }
 
-  const vendorsById = new Map((vendorRows.data ?? []).map((vendor) => [vendor.id, vendor]));
-  const categoriesById = new Map((categoryRows.data ?? []).map((category) => [category.id, category]));
+  const vendorData = (vendorRows.data ?? []) as VendorRow[];
+  const categoryData = (categoryRows.data ?? []) as CategoryRow[];
+  const categoryMapData = (categoryMapRows.data ?? []) as CategoryMapRow[];
+  const mediaData = (mediaRows.data ?? []) as MediaAssetRow[];
+  const reviewData = (reviewRows.data ?? []) as ReviewRow[];
+
+  const vendorsById = new Map(vendorData.map((vendor) => [vendor.id, vendor]));
+  const categoriesById = new Map(categoryData.map((category) => [category.id, category]));
   const productCategories = new Map<string, CategoryRow | null>();
 
-  (categoryMapRows.data ?? []).forEach((entry) => {
+  categoryMapData.forEach((entry) => {
     if (!productCategories.has(entry.product_id)) {
       productCategories.set(entry.product_id, categoriesById.get(entry.category_id) ?? null);
     }
   });
 
   const mediaByProduct = new Map<string, MediaAssetRow>();
-  (mediaRows.data ?? []).forEach((media) => {
+  mediaData.forEach((media) => {
     if (!media.product_id) return;
     if (!mediaByProduct.has(media.product_id)) {
       mediaByProduct.set(media.product_id, media);
@@ -135,7 +143,7 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
   });
 
   const ratingsByProduct = new Map<string, { total: number; count: number }>();
-  (reviewRows.data ?? []).forEach((review) => {
+  reviewData.forEach((review) => {
     if (!review.product_id) return;
     const current = ratingsByProduct.get(review.product_id) ?? { total: 0, count: 0 };
     ratingsByProduct.set(review.product_id, {
@@ -144,7 +152,7 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
     });
   });
 
-  const products: MarketplaceProduct[] = (productRows ?? []).map((product: ProductRow) => {
+  const products: MarketplaceProduct[] = productData.map((product: ProductRow) => {
     const category = productCategories.get(product.id) ?? null;
     const vendor = (product.vendor_id && vendorsById.get(product.vendor_id)) || null;
     const media = mediaByProduct.get(product.id);
@@ -178,12 +186,12 @@ export async function fetchMarketplaceInventory(options: { limit?: number } = {}
     };
   });
 
-  const countsByCategoryId = (categoryMapRows.data ?? []).reduce<Record<string, number>>((acc, entry) => {
+  const countsByCategoryId = categoryMapData.reduce<Record<string, number>>((acc, entry) => {
     acc[entry.category_id] = (acc[entry.category_id] ?? 0) + 1;
     return acc;
   }, {});
 
-  const categories: MarketplaceCategory[] = (categoryRows.data ?? []).map((category: CategoryRow) => ({
+  const categories: MarketplaceCategory[] = categoryData.map((category: CategoryRow) => ({
     id: category.id,
     label: category.name,
     slug: category.slug,
