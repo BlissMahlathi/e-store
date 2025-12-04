@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
@@ -13,10 +14,16 @@ import { cn } from "@/lib/utils";
 export function SiteHeader() {
   const pathname = usePathname();
   const { role, isAuthenticated, signOut } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const filteredLinks = NAV_LINKS.filter((link) => !link.roles || link.roles.includes(role));
 
   const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const closeMenu = () => setIsMenuOpen(false);
+  const handleSignOut = () => {
+    closeMenu();
+    signOut();
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
@@ -32,7 +39,7 @@ export function SiteHeader() {
             <div className="rounded-full border border-border/60 bg-card/90 px-2 py-1 shadow-sm">
               <CartWishlistControls className="gap-1" />
             </div>
-            <Sheet>
+            <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="outline"
@@ -55,6 +62,7 @@ export function SiteHeader() {
                         <Link
                           key={link.href}
                           href={link.href}
+                          onClick={closeMenu}
                           className={cn(
                             "rounded-2xl border px-4 py-3 text-sm font-medium capitalize transition-colors",
                             isActiveLink(link.href)
@@ -71,16 +79,20 @@ export function SiteHeader() {
                     <p className="text-xs uppercase text-muted-foreground">Account</p>
                     <div className="mt-3 space-y-2">
                       {isAuthenticated ? (
-                        <Button className="w-full" onClick={() => signOut()}>
+                        <Button className="w-full" onClick={handleSignOut}>
                           Sign out
                         </Button>
                       ) : (
                         <>
                           <Button asChild className="w-full">
-                            <Link href="/login">Login</Link>
+                            <Link href="/login" onClick={closeMenu}>
+                              Login
+                            </Link>
                           </Button>
                           <Button variant="outline" asChild className="w-full">
-                            <Link href="/register">Create account</Link>
+                            <Link href="/register" onClick={closeMenu}>
+                              Create account
+                            </Link>
                           </Button>
                         </>
                       )}
@@ -89,7 +101,9 @@ export function SiteHeader() {
                   <div className="rounded-2xl border border-border/70 p-4">
                     <p className="text-xs uppercase text-muted-foreground">Vendors</p>
                     <Button variant="secondary" asChild className="mt-3 w-full">
-                      <Link href="/vendors/register">Become a vendor</Link>
+                      <Link href="/vendors/register" onClick={closeMenu}>
+                        Become a vendor
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -132,26 +146,6 @@ export function SiteHeader() {
               </Button>
             </>
           )}
-        </div>
-        <div className="md:hidden">
-          <div className="rounded-3xl border border-border/60 bg-card/90 p-1.5 shadow-sm">
-            <nav className="flex gap-1 overflow-x-auto pb-1">
-              {filteredLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "inline-flex flex-1 min-w-[120px] items-center justify-center rounded-2xl px-4 py-2 text-sm font-medium capitalize transition-all",
-                    isActiveLink(link.href)
-                      ? "bg-primary text-primary-foreground shadow"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
         </div>
       </div>
     </header>
