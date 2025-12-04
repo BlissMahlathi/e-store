@@ -268,7 +268,7 @@ export function ProfileForm() {
             value={form.location}
             disabled={isLoading || isSaving}
             onChange={handleInputChange}
-            placeholder="Johannesburg, ZA"
+            placeholder="Nkowankowa, Limpopo"
           />
         </div>
       </div>

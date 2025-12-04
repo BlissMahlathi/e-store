@@ -190,7 +190,7 @@ export function VendorOnboardingForm() {
           </div>
           <div>
             <label className="text-sm font-medium">Business location</label>
-            <Input placeholder="Johannesburg, Gauteng" {...form.register("location")} />
+            <Input placeholder="Nkowankowa, Limpopo" {...form.register("location")} />
           </div>
           <div>
             <label className="text-sm font-medium">Business address</label>

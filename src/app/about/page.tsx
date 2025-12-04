@@ -89,7 +89,7 @@ export default function AboutPage() {
               <Link href="/vendors/register">Become a vendor</Link>
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground">Remote-first team across Johannesburg and Pretoria for launch.</p>
+          <p className="text-xs text-muted-foreground">Rooted in Nkowankowa, Limpopo with a remote-first team supporting launch.</p>
         </div>
         <Card className="border-border/60 bg-muted/30">
           <CardHeader className="space-y-3">

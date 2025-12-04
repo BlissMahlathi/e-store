@@ -34,7 +34,7 @@ export const NAV_LINKS: NavLink[] = [
 export const HERO_STATS = [
   { label: "Launch window", value: "Jan 2026" },
   { label: "Pilot vendors", value: "24" },
-  { label: "Founding cities", value: "JHB · PTA" },
+  { label: "Founding city", value: "Nkowankowa, Limpopo" },
 ];
 
 export const FEATURE_STEPS = [
