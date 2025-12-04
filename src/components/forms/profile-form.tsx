@@ -114,10 +114,14 @@ export function ProfileForm() {
   }, [supabase, user]);
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = event.target;
+    const target = event.target;
+    const { name, value } = target;
+    const isCheckbox = target instanceof HTMLInputElement && target.type === "checkbox";
+    const resolvedValue = isCheckbox ? target.checked : value;
+
     setForm((previous) => ({
       ...previous,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: resolvedValue,
     }));
   }, []);
 
