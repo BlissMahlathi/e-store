@@ -21,18 +21,25 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between md:gap-6">
-        <div className="flex items-center justify-between gap-4">
-          <div>
+        <div className="flex items-start justify-between gap-4 md:items-center">
+          <div className="space-y-0.5">
             <Link href="/" className="text-lg font-semibold tracking-tight">
               {COMPANY_NAME} Store
             </Link>
             <p className="text-xs text-muted-foreground">{COMPANY_TAGLINE}</p>
           </div>
           <div className="flex items-center gap-2 md:hidden">
-            <CartWishlistControls className="gap-1" />
+            <div className="rounded-full border border-border/60 bg-card/90 px-2 py-1 shadow-sm">
+              <CartWishlistControls className="gap-1" />
+            </div>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" aria-label="Open menu">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Open menu"
+                  className="rounded-full border-border/70 bg-background/80 shadow-sm"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -60,7 +67,7 @@ export function SiteHeader() {
                       ))}
                     </div>
                   </div>
-                  <div>
+                  <div className="rounded-2xl border border-border/70 bg-muted/40 p-4">
                     <p className="text-xs uppercase text-muted-foreground">Account</p>
                     <div className="mt-3 space-y-2">
                       {isAuthenticated ? (
@@ -79,7 +86,7 @@ export function SiteHeader() {
                       )}
                     </div>
                   </div>
-                  <div>
+                  <div className="rounded-2xl border border-border/70 p-4">
                     <p className="text-xs uppercase text-muted-foreground">Vendors</p>
                     <Button variant="secondary" asChild className="mt-3 w-full">
                       <Link href="/vendors/register">Become a vendor</Link>
@@ -127,21 +134,23 @@ export function SiteHeader() {
           )}
         </div>
         <div className="md:hidden">
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {filteredLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "rounded-full border px-4 py-1.5 text-sm capitalize transition-colors",
-                  isActiveLink(link.href)
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="rounded-3xl border border-border/60 bg-card/90 p-1.5 shadow-sm">
+            <nav className="flex gap-1 overflow-x-auto pb-1">
+              {filteredLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "inline-flex flex-1 min-w-[120px] items-center justify-center rounded-2xl px-4 py-2 text-sm font-medium capitalize transition-all",
+                    isActiveLink(link.href)
+                      ? "bg-primary text-primary-foreground shadow"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
           </div>
         </div>
       </div>
