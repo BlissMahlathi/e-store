@@ -6,6 +6,7 @@ declare module "@paystack/inline-js" {
     ref?: string;
     currency?: string;
     channels?: string[];
+    metadata?: Record<string, unknown>;
     onClose?: () => void;
     callback?: (response: { reference: string }) => void;
   };
