@@ -111,6 +111,14 @@ export async function POST(request: Request) {
     if (resendKey) {
       const inserted = data as Pick<CipcRegistrationRow, "id">;
       const summary = `New CIPC registration request from ${values.applicantName} (${values.applicantEmail}).`;
+      const hostnameFromRequest = (() => {
+        try {
+          return new URL(request.url).hostname;
+        } catch {
+          return null;
+        }
+      })();
+      const fromHostname = hostnameFromRequest ?? "inhimstore.local";
       try {
         await fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -119,7 +127,7 @@ export async function POST(request: Request) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: `${COMPANY_NAME} <no-reply@${new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").hostname}>`,
+            from: `${COMPANY_NAME} <no-reply@${fromHostname}>`,
             to: [forwardEmail],
             subject: `CIPC registration request ${inserted.id}`,
             text: `${summary}\nCompany type: ${values.businessStructure}\nPreferred name: ${values.nameOptionOne}\nDirectors: ${directorList.join(", ")}`,

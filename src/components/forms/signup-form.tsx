@@ -6,6 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSupabase } from "@/components/providers/supabase-provider";
 
+const fallbackRedirect = "http://localhost:3000/login";
+
+function resolveRedirectUrl() {
+  if (typeof window !== "undefined" && window.location.origin) {
+    return `${window.location.origin}/login`;
+  }
+  return fallbackRedirect;
+}
+
 export function SignupForm() {
   const supabase = useSupabase(true);
   const [status, setStatus] = useState<string | null>(null);
@@ -31,7 +40,7 @@ export function SignupForm() {
         email,
         password,
         options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/login`,
+          emailRedirectTo: resolveRedirectUrl(),
           data: {
             role: "customer",
             display_name: fullName || undefined,
