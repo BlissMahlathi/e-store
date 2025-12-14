@@ -87,14 +87,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = await getSupabaseServerClient();
     const { data: vendors } = await supabase
       .from("vendors")
-      .select("id, updated_at")
+      .select("id, created_at")
       .eq("is_active", true)
       .limit(500);
 
     if (vendors) {
       vendorPages = vendors.map((vendor) => ({
         url: `${siteUrl}/vendors/${vendor.id}`,
-        lastModified: new Date(vendor.updated_at || new Date()),
+        lastModified: new Date(vendor.created_at || new Date()),
         changeFrequency: "weekly" as const,
         priority: 0.6,
       }));
