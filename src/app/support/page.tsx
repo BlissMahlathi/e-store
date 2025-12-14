@@ -1,5 +1,12 @@
 import { Metadata } from "next";
-import { CalendarClock, Mail, MessageSquare, PhoneCall, Smartphone, type LucideIcon } from "lucide-react";
+import {
+  CalendarClock,
+  Mail,
+  MessageSquare,
+  PhoneCall,
+  Smartphone,
+  type LucideIcon,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +19,38 @@ import {
 } from "@/lib/constants";
 import { SupportRequestForm } from "@/components/support/support-request-form";
 
-export const metadata: Metadata = { title: `Support | ${COMPANY_NAME}` };
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://inhimstore.co.za";
+
+export const metadata: Metadata = {
+  title: "Customer Support | Contact Us | Help Center",
+  description:
+    "Get help from INHIMStore's dedicated support team. Contact us via phone, email, or WhatsApp. Speak directly with our directors. Fast response times for vendors and customers alike.",
+  keywords: [
+    "INHIMStore support",
+    "contact us",
+    "customer service South Africa",
+    "help center",
+    "vendor support",
+    "phone support",
+    "WhatsApp support",
+    "e-commerce help",
+  ],
+  openGraph: {
+    title: "Customer Support | INHIMStore Help Center",
+    description:
+      "Get help from our dedicated team. Contact us via phone, email, or WhatsApp.",
+    url: `${siteUrl}/support`,
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Customer Support | INHIMStore",
+    description: "Need help? Our team is here for you.",
+  },
+  alternates: {
+    canonical: `${siteUrl}/support`,
+  },
+};
 
 type SupportChannel = {
   title: string;
@@ -28,21 +66,24 @@ type SupportChannel = {
 const channels: SupportChannel[] = [
   {
     title: "Email Bliss (Director)",
-    description: "Reach the decision-maker directly for escalations, compliance, and partnership approvals.",
+    description:
+      "Reach the decision-maker directly for escalations, compliance, and partnership approvals.",
     action: "Email Bliss",
     href: `mailto:${REGISTRATION_EMAIL}?subject=Director%20support%20request`,
     icon: Mail,
   },
   {
     title: "Vendor desk (Cynthia)",
-    description: "Questions about onboarding, catalog prep, or fulfilment rehearsals go straight to Cynthia.",
+    description:
+      "Questions about onboarding, catalog prep, or fulfilment rehearsals go straight to Cynthia.",
     action: "Message Cynthia",
     href: `mailto:${REGISTRATION_EMAIL}?subject=Vendor%20desk%20-%20attention%20Cynthia`,
     icon: MessageSquare,
   },
   {
     title: "Schedule onboarding call",
-    description: "Request a 30-minute session to review paperwork, payouts, or product strategy.",
+    description:
+      "Request a 30-minute session to review paperwork, payouts, or product strategy.",
     action: "Request a slot",
     href: `mailto:${REGISTRATION_EMAIL}?subject=Schedule%20onboarding%20call&body=Please%20share%20two%20time%20slots%20that%20suit%20you.`,
     icon: CalendarClock,
@@ -82,14 +123,20 @@ export default function SupportPage() {
   return (
     <section className="space-y-10">
       <div className="space-y-4">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">Help center</p>
-        <h1 className="text-4xl font-semibold">Support for every launch stage</h1>
+        <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          Help center
+        </p>
+        <h1 className="text-4xl font-semibold">
+          Support for every launch stage
+        </h1>
         <p className="text-muted-foreground md:w-3/4">
-          {COMPANY_NAME} is in pilot, so your messages go straight to leadership. Use the quick links below or send a
-          detailed request—either way, you will hear back within one business day.
+          {COMPANY_NAME} is in pilot, so your messages go straight to
+          leadership. Use the quick links below or send a detailed
+          request—either way, you will hear back within one business day.
         </p>
         <p className="text-xs text-muted-foreground">
-          {COMPANY_TAGLINE} · Primary inbox: {REGISTRATION_EMAIL} · Phone / WhatsApp: {SUPPORT_PHONE_DISPLAY}
+          {COMPANY_TAGLINE} · Primary inbox: {REGISTRATION_EMAIL} · Phone /
+          WhatsApp: {SUPPORT_PHONE_DISPLAY}
         </p>
       </div>
 
@@ -113,8 +160,14 @@ export default function SupportPage() {
                 </Button>
                 {channel.secondaryHref ? (
                   <Button asChild variant="outline" className="w-full">
-                    <a href={channel.secondaryHref} target="_blank" rel="noreferrer">
-                      {SecondaryIcon ? <SecondaryIcon className="mr-2 h-4 w-4" /> : null}
+                    <a
+                      href={channel.secondaryHref}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {SecondaryIcon ? (
+                        <SecondaryIcon className="mr-2 h-4 w-4" />
+                      ) : null}
                       {channel.secondaryAction}
                     </a>
                   </Button>
@@ -130,7 +183,8 @@ export default function SupportPage() {
           <CardHeader>
             <CardTitle>Send a detailed request</CardTitle>
             <p className="text-sm text-muted-foreground">
-              This form opens a pre-filled email so you can attach documents before sending to our support inbox.
+              This form opens a pre-filled email so you can attach documents
+              before sending to our support inbox.
             </p>
           </CardHeader>
           <CardContent>
@@ -142,16 +196,27 @@ export default function SupportPage() {
             <CardTitle>Response times</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
-            <p>Weekdays 08:00 – 18:00 SAST · Weekends for urgent payout matters only.</p>
-            <p>Average reply: under 6 hours during the pilot, under 24 hours post-launch.</p>
-            <p>Escalations go straight to Bliss if a request waits longer than 24 hours.</p>
+            <p>
+              Weekdays 08:00 – 18:00 SAST · Weekends for urgent payout matters
+              only.
+            </p>
+            <p>
+              Average reply: under 6 hours during the pilot, under 24 hours
+              post-launch.
+            </p>
+            <p>
+              Escalations go straight to Bliss if a request waits longer than 24
+              hours.
+            </p>
           </CardContent>
         </Card>
       </div>
 
       <div className="space-y-4">
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">FAQ</p>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">
+            FAQ
+          </p>
           <h2 className="text-2xl font-semibold">Answers before you email</h2>
         </div>
         <div className="space-y-3">
@@ -160,7 +225,9 @@ export default function SupportPage() {
               <CardHeader>
                 <CardTitle className="text-base">{item.q}</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">{item.a}</CardContent>
+              <CardContent className="text-sm text-muted-foreground">
+                {item.a}
+              </CardContent>
             </Card>
           ))}
         </div>
