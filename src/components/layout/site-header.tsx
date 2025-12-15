@@ -152,7 +152,7 @@ export function SiteHeader() {
 
                   {/* Vendor CTA */}
                   <div className="px-4 pb-4">
-                    <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 p-5">
+                    <div className="overflow-hidden rounded-2xl bg-linear-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 p-5">
                       <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/20">
                           <Store className="h-5 w-5 text-primary" />

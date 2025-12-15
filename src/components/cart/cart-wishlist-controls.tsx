@@ -54,7 +54,7 @@ export function CartWishlistControls({ className }: CartWishlistControlsProps) {
           >
             <Heart className="h-5 w-5" />
             {wishlistCount ? (
-              <span className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-1.5 text-[10px] font-semibold text-white shadow-lg ring-2 ring-background">
+              <span className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-linear-to-r from-pink-500 to-rose-500 px-1.5 text-[10px] font-semibold text-white shadow-lg ring-2 ring-background">
                 {wishlistCount > 99 ? "99+" : wishlistCount}
               </span>
             ) : null}
@@ -66,7 +66,7 @@ export function CartWishlistControls({ className }: CartWishlistControlsProps) {
         >
           <SheetHeader className="space-y-1 pb-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-pink-500/20 to-rose-500/20">
                 <Heart className="h-5 w-5 text-rose-500" />
               </div>
               <div>
@@ -107,7 +107,7 @@ export function CartWishlistControls({ className }: CartWishlistControlsProps) {
                     </div>
                     <Button
                       size="sm"
-                      className="mt-4 w-full rounded-xl bg-gradient-to-r from-primary to-primary/80 font-medium shadow-sm transition-all duration-200 hover:shadow-md"
+                      className="mt-4 w-full rounded-xl bg-linear-to-r from-primary to-primary/80 font-medium shadow-sm transition-all duration-200 hover:shadow-md"
                       onClick={() => {
                         cart.addItem({
                           id: item.id,
@@ -166,7 +166,7 @@ export function CartWishlistControls({ className }: CartWishlistControlsProps) {
           >
             <ShoppingCart className="h-5 w-5" />
             {cartSummary.count ? (
-              <span className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-primary to-primary/80 px-1.5 text-[10px] font-semibold text-white shadow-lg ring-2 ring-background">
+              <span className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-linear-to-r from-primary to-primary/80 px-1.5 text-[10px] font-semibold text-white shadow-lg ring-2 ring-background">
                 {cartSummary.count > 99 ? "99+" : cartSummary.count}
               </span>
             ) : null}
@@ -178,7 +178,7 @@ export function CartWishlistControls({ className }: CartWishlistControlsProps) {
         >
           <SheetHeader className="space-y-1 pb-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-primary/20 to-primary/10">
                 <ShoppingBag className="h-5 w-5 text-primary" />
               </div>
               <div>
@@ -270,7 +270,7 @@ export function CartWishlistControls({ className }: CartWishlistControlsProps) {
             {hasCartItems && (
               <div className="space-y-4 border-t border-border/50 pt-4">
                 {/* Order Summary */}
-                <div className="rounded-2xl bg-gradient-to-br from-muted/80 to-muted/40 p-5">
+                <div className="rounded-2xl bg-linear-to-br from-muted/80 to-muted/40 p-5">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">

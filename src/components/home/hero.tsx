@@ -51,7 +51,7 @@ export function Hero() {
           itemProp="headline"
         >
           South Africa's Most Trusted{" "}
-          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             Multi-Vendor Marketplace
           </span>
         </h1>
@@ -115,7 +115,7 @@ export function Hero() {
 
       {/* Stats Section */}
       <aside
-        className="grid gap-6 rounded-3xl border border-border/60 bg-gradient-to-br from-card to-muted/30 px-8 py-8 shadow-sm sm:grid-cols-3"
+        className="grid gap-6 rounded-3xl border border-border/60 bg-linear-to-br from-card to-muted/30 px-8 py-8 shadow-sm sm:grid-cols-3"
         data-animate
         aria-label="Key statistics"
         itemScope
