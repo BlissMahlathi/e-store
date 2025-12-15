@@ -1,21 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSupabase } from "@/components/providers/supabase-provider";
 
-const fallbackRedirect = "http://localhost:3000/login";
-
-function resolveRedirectUrl() {
-  if (typeof window !== "undefined" && window.location.origin) {
-    return `${window.location.origin}/login`;
+function getBaseUrl() {
+  // First try the environment variable (works on server and client)
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
   }
-  return fallbackRedirect;
+  // Fallback to window.location.origin on client
+  if (typeof window !== "undefined" && window.location.origin) {
+    return window.location.origin;
+  }
+  // Last resort fallback
+  return "https://inhimstore.co.za";
 }
 
 export function SignupForm() {
+  const router = useRouter();
   const supabase = useSupabase(true);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,11 +42,15 @@ export function SignupForm() {
       setStatus(null);
       setError(null);
       setIsSubmitting(true);
+
+      const baseUrl = getBaseUrl();
+      const emailRedirectTo = `${baseUrl}/login?verified=true`;
+
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: resolveRedirectUrl(),
+          emailRedirectTo,
           data: {
             role: "customer",
             display_name: fullName || undefined,
@@ -52,8 +62,15 @@ export function SignupForm() {
         setError(signUpError.message);
         return;
       }
-      setStatus("Registration submitted. Please verify your email before logging in.");
+      setStatus(
+        "Registration successful! Check your email for the verification link."
+      );
       (event.currentTarget as HTMLFormElement).reset();
+
+      // Redirect to login page after 3 seconds
+      setTimeout(() => {
+        router.push("/login?registered=true");
+      }, 3000);
     };
 
     run();
@@ -63,7 +80,12 @@ export function SignupForm() {
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div>
         <label className="text-sm font-medium">Full name</label>
-        <Input type="text" name="fullName" placeholder="Your name" autoComplete="name" />
+        <Input
+          type="text"
+          name="fullName"
+          placeholder="Your name"
+          autoComplete="name"
+        />
       </div>
       <div>
         <label className="text-sm font-medium">Email</label>
@@ -71,7 +93,12 @@ export function SignupForm() {
       </div>
       <div>
         <label className="text-sm font-medium">Password</label>
-        <Input type="password" name="password" required placeholder="Create a strong password" />
+        <Input
+          type="password"
+          name="password"
+          required
+          placeholder="Create a strong password"
+        />
       </div>
       <Button type="submit" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? "Submitting..." : "Create account"}
