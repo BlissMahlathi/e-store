@@ -77,7 +77,7 @@ export const metadata: Metadata = {
   ],
   authors: [
     { name: "INHIM Trading (Pty) Ltd", url: siteUrl },
-    { name: "Cynthia Maebeja" },
+    { name: "C Maenetja" },
   ],
   creator: "INHIM Trading (Pty) Ltd",
   publisher: "INHIM Trading (Pty) Ltd",
@@ -225,7 +225,11 @@ const jsonLd = {
       founders: [
         {
           "@type": "Person",
-          name: "Cynthia Maebeja",
+          name: "Mr HB Mahlathi",
+        },
+        {
+          "@type": "Person",
+          name: "C Maenetja",
         },
       ],
       contactPoint: [

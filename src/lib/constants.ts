@@ -7,7 +7,12 @@ export const SUPPORT_PHONE_DISPLAY = "071 523 1720";
 export const SUPPORT_PHONE_DIAL = "+27715231720";
 export const SUPPORT_WHATSAPP_URL = "https://wa.me/27715231720";
 
-export const ALLOWED_ROLES: UserRole[] = ["guest", "customer", "vendor", "admin"];
+export const ALLOWED_ROLES: UserRole[] = [
+  "guest",
+  "customer",
+  "vendor",
+  "admin",
+];
 
 export const COMMISSION_RATE = 0.12;
 export const DISCOUNT_THRESHOLD_AMOUNT = 15_000;
@@ -27,28 +32,32 @@ export const NAV_LINKS: NavLink[] = [
   { label: "about", href: "/about" },
   { label: "support", href: "/support" },
   { label: "business services", href: "/services/cipc-support" },
-  { label: "vendor dashboard", href: "/dashboard/vendor", roles: ["vendor", "admin"] },
+  {
+    label: "vendor dashboard",
+    href: "/dashboard/vendor",
+    roles: ["vendor", "admin"],
+  },
   { label: "admin", href: "/dashboard/admin", roles: ["admin"] },
 ];
 
 export const HERO_STATS = [
-  { label: "Launch window", value: "Jan 2026" },
-  { label: "Pilot vendors", value: "24" },
-  { label: "Founding city", value: "Nkowankowa, Limpopo" },
+  { label: "Status", value: "Live" },
+  { label: "Active vendors", value: "24+" },
+  { label: "Headquarters", value: "Nkowankowa, Limpopo" },
 ];
 
 export const FEATURE_STEPS = [
   {
-    title: "Vendor interest list",
-    body: "Directors review each application personally while we finalize fulfilment partners for the 2025 pilot.",
+    title: "Vendor application",
+    body: "Our directors personally review each application to ensure quality and alignment with our marketplace standards.",
   },
   {
     title: "Catalog curation",
-    body: "Cynthia Maebeja works with every vendor to align imagery, pricing, and delivery promises before launch.",
+    body: "C Maenetja works with every vendor to align imagery, pricing, and delivery promises for optimal presentation.",
   },
   {
     title: "Commission onboarding",
-    body: "As operations switch on, we activate flexible fee tiers and payouts managed directly by INHIM Trading.",
+    body: "We activate flexible fee tiers and payouts managed directly by INHIM Trading for seamless operations.",
   },
 ];
 
@@ -106,18 +115,21 @@ export const COMMISSION_TIERS = [
 
 export const TESTIMONIALS = [
   {
-    quote: "INHIMStore treats every listing like a flagship boutique, which is why I’m ready to launch here first.",
+    quote:
+      "INHIMStore treats every listing like a flagship boutique, which is why I chose to sell here.",
     author: "Naledi",
     role: "Home fragrance founder",
   },
   {
-    quote: "We’re obsessed with operational readiness so that January 2026 feels like day 100, not day one.",
-    author: "Bliss Mahlathi",
+    quote:
+      "We are committed to operational excellence, ensuring every transaction meets our high standards.",
+    author: "Mr HB Mahlathi",
     role: "Director, INHIM Trading",
   },
   {
-    quote: "My priority is giving vendors a direct line to our team—no generic call centers, just real partners.",
-    author: "Cynthia Maebeja",
+    quote:
+      "My priority is giving vendors a direct line to our team—no generic call centres, just real partners.",
+    author: "C Maenetja",
     role: "Store Manager, INHIMStore",
   },
 ];

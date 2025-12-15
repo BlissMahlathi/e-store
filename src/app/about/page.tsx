@@ -26,8 +26,8 @@ export const metadata: Metadata = {
     "Limpopo business",
     "e-commerce South Africa",
     "support local vendors",
-    "Bliss Mahlathi",
-    "Cynthia Maebeja",
+    "Mr HB Mahlathi",
+    "C Maenetja",
     "marketplace founders",
   ],
   openGraph: {
@@ -62,12 +62,12 @@ const stats = [
     detail: "INHIM Trading (Pty) Ltd",
   },
   {
-    label: "Launch plan",
-    value: "Jan 2026",
-    detail: "Pilot operations Q4 2025",
+    label: "Status",
+    value: "Operational",
+    detail: "Serving customers nationwide",
   },
   { label: "Leadership seats", value: "2", detail: "Director + Store Manager" },
-  { label: "Vendor interest", value: "140+", detail: "Pre-qualified artisans" },
+  { label: "Active vendors", value: "140+", detail: "Verified artisans" },
 ];
 
 const values = [
@@ -80,7 +80,7 @@ const values = [
   {
     title: "Director-level oversight",
     description:
-      "Bliss personally reviews commissions, contracts, and compliance before vendors go live.",
+      "Mr HB Mahlathi personally reviews commissions, contracts, and compliance before vendors go live.",
     icon: ShieldCheck,
   },
   {
@@ -92,7 +92,7 @@ const values = [
   {
     title: "Community uplift",
     description:
-      "Cynthia keeps vendors in the loop with weekly office hours, WhatsApp check-ins, and launch rehearsals.",
+      "C Maenetja keeps vendors in the loop with regular office hours, WhatsApp check-ins, and onboarding support.",
     icon: Users,
   },
 ];
@@ -101,7 +101,7 @@ const milestones = [
   {
     year: "2018",
     title: "CIPC registration",
-    body: "Inhim Trading (Pty) Ltd incorporated to formalize compliance and finance operations.",
+    body: "Inhim Trading (Pty) Ltd incorporated to formalise compliance and finance operations.",
   },
   {
     year: "2023",
@@ -110,28 +110,28 @@ const milestones = [
   },
   {
     year: "2025",
-    title: "Pilot readiness",
-    body: "Finalizing vendor interest list, fulfilment partners, and customer support workflows.",
+    title: "Platform launch",
+    body: "Finalised vendor partnerships, fulfilment networks, and customer support workflows.",
   },
   {
-    year: "2026",
-    title: "Public opening",
-    body: "Operations switch on in January with Gauteng vendors, then expand nationally.",
+    year: "Now",
+    title: "Full operations",
+    body: "Serving customers nationwide with a growing network of verified South African vendors.",
   },
 ];
 
 const team = [
   {
-    name: "Bliss Mahlathi",
+    name: "Mr HB Mahlathi",
     role: "Director, INHIM Trading",
     focus:
       "Sole director overseeing strategy, legal, and capital while meeting every vendor personally.",
   },
   {
-    name: "Cynthia Maebeja",
+    name: "C Maenetja",
     role: "Store & Vendor Manager",
     focus:
-      "Guides catalogs, logistics, and day-to-day support so launch vendors are never left guessing.",
+      "Guides catalogs, logistics, and day-to-day support so vendors are never left guessing.",
   },
 ];
 
@@ -149,15 +149,15 @@ export default function AboutPage() {
               INHIM Trading
             </h1>
             <p className="mt-4 text-muted-foreground md:text-lg">
-              Bliss Mahlathi is currently the only director of INHIM Trading,
-              and Cynthia Maebeja manages daily vendor relationships. Together
-              we are preparing INHIMStore for a controlled pilot before flipping
-              on full operations in January 2026.
+              Mr HB Mahlathi is the director of INHIM Trading, and C Maenetja
+              manages daily vendor relationships. Together we operate
+              INHIMStore, delivering quality products to customers across South
+              Africa.
             </p>
             <p className="mt-4 text-sm text-muted-foreground">
-              Pilot testing begins later this year with a limited catalog so
-              that fulfilment, payouts, and customer care are tuned before the
-              public opening.
+              Our platform connects trusted vendors with discerning customers,
+              ensuring exceptional service, secure payments, and reliable
+              delivery.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -169,28 +169,28 @@ export default function AboutPage() {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground">
-            Rooted in Nkowankowa, Limpopo with a remote-first team supporting
-            launch.
+            Rooted in Nkowankowa, Limpopo with a dedicated team supporting
+            operations nationwide.
           </p>
         </div>
         <Card className="border-border/60 bg-muted/30">
           <CardHeader className="space-y-3">
-            <CardTitle className="text-2xl">Operating readiness</CardTitle>
+            <CardTitle className="text-2xl">Operational excellence</CardTitle>
             <CardDescription>
-              Every system—catalog, payouts, customer care—is rehearsed with
-              real vendors before the January 2026 launch.
+              Every system—catalog, payouts, customer care—is optimised to
+              deliver the best experience for vendors and customers alike.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm text-muted-foreground">
             <p>
-              We coordinate pilots through private Slack groups, WhatsApp
-              hotlines, and in-person vendor visits. Logistics, packaging, and
-              payments are tested in small batches so we can publish accurate
-              SLAs on day one.
+              We maintain direct communication channels through WhatsApp
+              hotlines and dedicated vendor support. Our logistics, packaging,
+              and payment systems are continuously refined to meet the highest
+              standards.
             </p>
             <p>
-              The cadence: vendor rehearsal months (now), Gauteng soft launch
-              (Q4 2025), nationwide customer access (January 2026).
+              Our commitment: quality products, reliable delivery, and
+              exceptional service across South Africa.
             </p>
           </CardContent>
         </Card>

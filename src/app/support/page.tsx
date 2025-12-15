@@ -65,19 +65,19 @@ type SupportChannel = {
 
 const channels: SupportChannel[] = [
   {
-    title: "Email Bliss (Director)",
+    title: "Email the Director",
     description:
-      "Reach the decision-maker directly for escalations, compliance, and partnership approvals.",
-    action: "Email Bliss",
+      "Reach Mr HB Mahlathi directly for escalations, compliance, and partnership approvals.",
+    action: "Email Director",
     href: `mailto:${REGISTRATION_EMAIL}?subject=Director%20support%20request`,
     icon: Mail,
   },
   {
-    title: "Vendor desk (Cynthia)",
+    title: "Vendor desk",
     description:
-      "Questions about onboarding, catalog prep, or fulfilment rehearsals go straight to Cynthia.",
-    action: "Message Cynthia",
-    href: `mailto:${REGISTRATION_EMAIL}?subject=Vendor%20desk%20-%20attention%20Cynthia`,
+      "Questions about onboarding, catalog prep, or fulfilment go straight to C Maenetja.",
+    action: "Message Vendor Desk",
+    href: `mailto:${REGISTRATION_EMAIL}?subject=Vendor%20desk%20enquiry`,
     icon: MessageSquare,
   },
   {
@@ -89,7 +89,7 @@ const channels: SupportChannel[] = [
     icon: CalendarClock,
   },
   {
-    title: "Call Cynthia directly",
+    title: "Call us directly",
     description: `Phone line for urgent vendor or customer matters. Number: ${SUPPORT_PHONE_DISPLAY}.`,
     action: "Call now",
     href: `tel:${SUPPORT_PHONE_DIAL}`,
@@ -102,16 +102,16 @@ const channels: SupportChannel[] = [
 
 const faqs = [
   {
-    q: "When does INHIMStore start operating?",
-    a: "Pilot testing runs through the end of this year, and public checkout opens January 2026 once fulfilment and payouts meet our benchmarks.",
+    q: "Is INHIMStore fully operational?",
+    a: "Yes, INHIMStore is fully operational and serving customers across South Africa with secure payments and reliable delivery.",
   },
   {
     q: "Who will answer my support request?",
-    a: "Either Bliss (director) or Cynthia (store manager) personally replies—no outsourced call centers.",
+    a: "Our dedicated team personally handles all enquiries—no outsourced call centres, just real partners who care.",
   },
   {
-    q: "How fast are payouts once we launch?",
-    a: "Weekly Friday settlements with manual overrides for priority vendors during the pilot phase.",
+    q: "How fast are vendor payouts?",
+    a: "Weekly Friday settlements with priority processing for high-volume vendors.",
   },
   {
     q: "Do you support both products and services?",
@@ -130,9 +130,9 @@ export default function SupportPage() {
           Support for every launch stage
         </h1>
         <p className="text-muted-foreground md:w-3/4">
-          {COMPANY_NAME} is in pilot, so your messages go straight to
-          leadership. Use the quick links below or send a detailed
-          request—either way, you will hear back within one business day.
+          {COMPANY_NAME} is here to help. Use the quick links below or send a
+          detailed request—either way, you will hear back within one business
+          day.
         </p>
         <p className="text-xs text-muted-foreground">
           {COMPANY_TAGLINE} · Primary inbox: {REGISTRATION_EMAIL} · Phone /
@@ -201,12 +201,12 @@ export default function SupportPage() {
               only.
             </p>
             <p>
-              Average reply: under 6 hours during the pilot, under 24 hours
-              post-launch.
+              Average reply: under 6 hours during business hours, under 24 hours
+              otherwise.
             </p>
             <p>
-              Escalations go straight to Bliss if a request waits longer than 24
-              hours.
+              Escalations go straight to the director if a request waits longer
+              than 24 hours.
             </p>
           </CardContent>
         </Card>

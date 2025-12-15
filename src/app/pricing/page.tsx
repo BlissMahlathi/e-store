@@ -77,8 +77,8 @@ export default function PricingPage() {
         <CardContent className="space-y-2 p-6">
           <p className="text-sm font-medium">Payout cadence</p>
           <p className="text-sm text-muted-foreground">
-            Weekly settlements every Friday · Minimum payout R1,000 · Instant
-            payouts coming soon.
+            Weekly settlements every Friday · Minimum payout R1,000 · Priority
+            processing for high-volume vendors.
           </p>
         </CardContent>
       </Card>
